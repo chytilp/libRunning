@@ -1,0 +1,56 @@
+{
+  "barr": {
+    "type": "barr",
+    "description": "",
+    "files": [
+      "./tests/data/example_data_1.json"
+    ],
+    "sections": [
+      "1.km",
+      "2.km",
+      "3.km",
+      "4.km",
+      "5.km",
+      "6.km",
+      "7.km",
+      "8.km",
+      "9.km",
+      "10.km"
+    ],
+    "aggregations": {
+      "1.round": {
+        "inputs": ["1.km", "2.km", "3.km", "4.km" ],
+        "operations": {
+          "filters": [],
+          "reducer": "sum"
+	    }
+      },
+      "under6": {
+        "inputs": ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km", "9.km", "10.km"],
+        "operations": {
+          "filters": [{"operator": "<", "value": 360}],
+          "reducer": "len"
+        },
+        "sort_definition": "more_is_best",
+        "time_convertible": false
+      },
+      "woutFilters": {
+        "inputs": ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km", "9.km", "10.km"],
+        "operations": {
+          "reducer": "max"
+        }
+      }
+    },
+    "dashboard_sections": [
+      "1.km",
+      "2.km",
+      "3.km",
+      "4.km",
+      "5.km",
+      "6.km",
+      "7.km",
+      "8.km"
+    ],
+    "dashboard_aggregations": ["1.round"]
+  }
+}

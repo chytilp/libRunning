@@ -1,0 +1,120 @@
+{
+  "barr": {
+    "type": "barr",
+    "files": [
+      "./data/example_data_1.json"
+    ],
+    "sections": [
+      "1.km",
+      "2.km",
+      "3.km",
+      "4.km",
+      "5.km",
+      "6.km",
+      "7.km",
+      "8.km",
+      "9.km"
+    ],
+    "aggregations": {
+      "1.round": {
+        "inputs": ["1.km", "2.km", "3.km", "4.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "2.round": {
+        "inputs": ["5.km", "6.km", "7.km", "8.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "rounds": {
+        "inputs": ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "first5": {
+        "inputs": ["1.km", "2.km", "3.km", "4.km", "5.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "first9": {
+        "inputs": ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km", "9.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "1.2km": {
+        "inputs": ["1.km", "2.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "2.2km": {
+        "inputs": ["3.km", "4.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "3.2km": {
+        "inputs": ["5.km", "6.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "4.2km": {
+        "inputs": ["7.km", "8.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "1.3km": {
+        "inputs": ["1.km", "2.km", "3.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "2.3km": {
+        "inputs": ["4.km", "5.km", "6.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "3.3km": {
+        "inputs": ["7.km", "8.km", "9.km"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "intervals_3": {
+        "inputs": ["intervals/0", "intervals/1", "intervals/2"],
+        "operations": {
+          "reducer": "sum"
+        }
+      },
+      "intervals_5": {
+        "inputs": ["intervals/0", "intervals/1", "intervals/2", "intervals/3", "intervals/4"],
+        "operations": {
+          "reducer": "sum"
+        }
+      }
+    },
+    "dashboard_sections": [
+      "1.km",
+      "2.km",
+      "3.km",
+      "4.km",
+      "5.km",
+      "6.km",
+      "7.km",
+      "8.km"
+    ],
+    "dashboard_aggregations": [
+      "1.round",
+      "2.round",
+      "rounds"
+    ]
+  }
+}

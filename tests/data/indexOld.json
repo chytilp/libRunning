@@ -1,0 +1,50 @@
+{
+  "barr": {
+    "type": "barr",
+    "files": [
+      "./data/example_data_1.json"
+    ],
+    "sections": [
+      "1.km",
+      "2.km",
+      "3.km",
+      "4.km",
+      "5.km",
+      "6.km",
+      "7.km",
+      "8.km",
+      "9.km"
+    ],
+    "aggregations": {
+      "1.round": ["1.km", "2.km", "3.km", "4.km"],
+      "2.round": ["5.km", "6.km", "7.km", "8.km"],
+      "rounds": ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km"],
+      "first5": ["1.km", "2.km", "3.km", "4.km", "5.km"],
+      "first9": ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km", "9.km"],
+      "1.2km": ["1.km", "2.km"],
+      "2.2km": ["3.km", "4.km"],
+      "3.2km": ["5.km", "6.km"],
+      "4.2km": ["7.km", "8.km"],
+      "1.3km": ["1.km", "2.km", "3.km"],
+      "2.3km": ["4.km", "5.km", "6.km"],
+      "3.3km": ["7.km", "8.km", "9.km"],
+      "intervals_3": ["intervals/0", "intervals/1", "intervals/2"],
+      "intervals_5": ["intervals/0", "intervals/1", "intervals/2", "intervals/3", "intervals/4"]
+    },
+    "dashboard_sections": [
+      "1.km",
+      "2.km",
+      "3.km",
+      "4.km",
+      "5.km",
+      "6.km",
+      "7.km",
+      "8.km"
+    ],
+    "dashboard_aggregations": [
+      "1.round",
+      "2.round",
+      "rounds"
+    ]
+  }
+}
