@@ -7,7 +7,7 @@ from pathlib import Path
 import toml
 
 _config: Config | None = None
-_config_file: str = "./libRunning/config.toml"
+_config_file: str = "./config.toml"
 
 
 def set_config_file(file: str) -> None:
@@ -30,7 +30,8 @@ class Config:
 
     @staticmethod
     def load() -> Config:
-        config_data = toml.load(_config_file)
+        path = Path(Path(__file__).parent, Path(_config_file)).resolve()
+        config_data = toml.load(path)
         return Config(**config_data)
 
     def get_index_file_path(self) -> Path:
