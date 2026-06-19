@@ -126,7 +126,6 @@ def test_calculate_intervals_aggregations() -> None:
     root = new_data["trainings"]["2026-02-02"]["aggregations"]
     assert ROUND_2 not in list(root.keys())
     assert root[ROUND_1]["value"] == 1407
-    print(f"keys: {root.keys()}")
     assert root[INTERVALS_FIRST_3]["value"] == 471
     assert root[INTERVALS_TOTAL]["value"] == 815
     assert id(data_2) != id(new_data)
