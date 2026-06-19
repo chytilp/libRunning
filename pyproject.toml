@@ -31,7 +31,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["libRunning"]
+where = ["src"]
 
 [tool.setuptools.package-data]
 libRunning = ["*.toml"]
@@ -94,3 +94,6 @@ asyncio_default_fixture_loop_scope = "session"
 log_cli = true
 log_cli_format = "%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s"
 log_cli_level = "INFO"
+addopts = [
+    "--import-mode=importlib",
+]

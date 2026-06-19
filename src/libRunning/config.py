@@ -17,6 +17,7 @@ def set_config_file(file: str) -> None:
 
 def get_config() -> Config:
     global _config
+    global _config_file
     if _config is None:
         _config = Config.load()
     return _config
@@ -30,6 +31,7 @@ class Config:
 
     @staticmethod
     def load() -> Config:
+        global _config_file
         path = Path(Path(__file__).parent, Path(_config_file)).resolve()
         config_data = toml.load(path)
         return Config(**config_data)

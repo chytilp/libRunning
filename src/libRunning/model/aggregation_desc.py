@@ -29,6 +29,12 @@ class Filter:
     def passed_values_through_filter(self, values: list[int]) -> list[int]:
         return [value for value in values if self.passed_value_through_filter(value)]
 
+    def __hash__(self) -> int:
+        return hash(f"{self.operator},{self.value}")
+
+    def __eq__(self, other) -> bool:
+        return hash(self) == hash(other)
+
 
 class SortDefinition(StrEnum):
     LESS_IS_BEST = "less_is_best"

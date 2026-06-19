@@ -9,6 +9,12 @@ class RouteModel:
     name: str
     description: str = ""
 
+    def __hash__(self) -> int:
+        return hash(f"{self.name},{self.description}")
+
+    def __eq__(self, other: RouteModel) -> bool:
+        return hash(self) == hash(other)
+
 
 @dataclass
 class TrainingsModel:
