@@ -53,6 +53,8 @@ def _get_from_node(node: dict[str, Any], path: list[str]) -> tuple[bool, Any]:
                if node_value is not None:
                    output[child] = node_value
             return True, output
+        elif path_part == "key" and isinstance(tmp_node, dict):
+            return False, list(tmp_node.keys())
         elif path_part not in tmp_node:
             # raise ValueError(f"{path_part} not in data")
             return False, None

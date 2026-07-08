@@ -95,6 +95,12 @@ data: dict[str, Any] = {
                          ("2026-01-02", "4.km"): 430,
                          ("2026-01-03", "4.km"): 390,
                      }, id="* as trainings, * as sections, value"),
+        pytest.param(["trainings", "*", "sections", "key"],
+                     {
+                        "2026-01-01": ["1.km", "2.km", "3.km", "4.km"],
+                        "2026-01-02": ["1.km", "2.km", "3.km", "4.km"],
+                        "2026-01-03": ["1.km", "2.km", "3.km", "4.km"],
+                     }, id="* as trainings, sections, keys"),
     ),
 )
 def test_paths(path: list[str], expected: Any) -> None:

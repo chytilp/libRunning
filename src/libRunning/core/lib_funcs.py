@@ -72,6 +72,25 @@ def get_section(route: RouteModel, section: str, from_: str = "", to_: str = "",
 
     return SectionsModel(date_sections=date_sections, mark_date=mark_date)
 
+def _get_items(data : dict[str, Any], path: list[str]) -> list[str]:
+    data = get(data, path)
+    items: list[str] = []
+    for key, values in data.items():
+        for value in values:
+            if value not in items:
+                items.append(value)
+
+    return items
+
+def get_sections(route: RouteModel, from_: str = "", to_: str = "") -> list[str]:
+    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_)
+    return _get_items(data=data, path=["trainings", "*", "sections", "key"])
+
+
+def get_aggregations(route: RouteModel, from_: str = "", to_: str = "") -> list[str]:
+    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_)
+    return _get_items(data=data, path=["trainings", "*", "aggregations", "key"])
+
 
 def get_aggregation(route: RouteModel, aggregation: str, from_: str = "", to_: str = "", mark_date: str = ""
                     ) -> SectionsModel:

@@ -21,6 +21,8 @@ from libRunning.core.lib_funcs import (
     get_routes,
     get_section,
     get_section_grades,
+    get_sections,
+    get_aggregations,
 )
 
 
@@ -62,6 +64,15 @@ def test_get_section() -> None:
         "2026-01-01", "2026-01-02", "2026-01-03"
     ]
 
+def test_get_sections() -> None:
+    _prepare_config("data/config.toml")
+    result: list[str] = get_sections(RouteModel(name="barr", description=""))
+    assert result == ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km", "9.km", "10.km"]
+
+def test_get_aggregations() -> None:
+    _prepare_config("data/config.toml")
+    result: list[str] = get_aggregations(RouteModel(name="barr", description=""))
+    assert result == ["1.round", "under6", "woutFilters"]
 
 def test_get_aggregation() -> None:
     _prepare_config("data/config.toml")
