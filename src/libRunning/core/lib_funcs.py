@@ -170,3 +170,15 @@ def get_compare(route: RouteModel, date_1: str, date_2: str) -> CompareModel:
         data_1=date1_obj,
         data_2=date2_obj,
     )
+
+
+def get_dashboard_sections(route: RouteModel) -> list[str]:
+    config = get_config()
+    index_data = read_index(index_file=config.get_index_file_path(), route=route, version=2)
+    return index_data.dashboard_sections
+
+
+def get_dashboard_aggregations(route: RouteModel) -> list[str]:
+    config = get_config()
+    index_data = read_index(index_file=config.get_index_file_path(), route=route, version=2)
+    return index_data.dashboard_aggregations
