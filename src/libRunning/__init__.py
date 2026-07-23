@@ -1,5 +1,6 @@
 from libRunning.core.lib_funcs import (get_aggregation, get_aggregation_grades, get_compare, get_dashboard, get_date,
-                             get_dates, get_routes, get_section, get_section_grades, get_sections, get_aggregations)
+                                       get_dates, get_routes, get_section, get_section_grades, get_sections, get_aggregations,
+                                       get_dashboard_sections, get_dashboard_aggregations)
 from libRunning.model.printing import (CellIdentModel, CompareModel, DashboardModel, GradeModel, RouteModel, SectionModel,
                              SectionsModel, TrainingModel, TrainingsModel)
 
@@ -24,4 +25,6 @@ __all__ = [
     "get_section_grades",
     "get_sections",
     "get_aggregations",
+    "get_dashboard_sections",
+    "get_dashboard_aggregations",
 ]
