@@ -130,7 +130,7 @@ def sort_section(data: dict[str, Any], section: str) -> dict[str, Any]:
 def prepare_data(index_data: IndexData, from_: str, to_: str) -> dict[str, Any]:
     new_data = read(data, index_data.files)
     new_data = filter_(new_data, from_=from_, to_=to_)
-    new_data = calculate_aggregations(new_data, index_data.aggregations)
     new_data = sort_sections(new_data, index_data.sections)
+    new_data = calculate_aggregations(new_data, index_data.aggregations)
     new_data = sort_aggregations(new_data, list(index_data.aggregations.values()))
     return new_data

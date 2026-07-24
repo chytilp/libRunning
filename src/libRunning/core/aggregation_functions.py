@@ -13,15 +13,16 @@ def _sum_sections(data: dict[str, Any], training: str, sections: list[str]) -> t
     return True, sum(inputs)
 
 
-def _load_data(data: dict[str, Any], training: str, sections: list[str], all_inputs_needed: bool) -> tuple[bool, list[int]]:
+def _load_data(data: dict[str, Any], training: str, sections: list[str], all_inputs_needed: bool
+               ) -> tuple[bool, list[dict[str, Any]]]:
     sections_data: dict = data["trainings"][training]["sections"]
-    inputs: list[int] = []
+    inputs: list[dict[str, Any]] = []
     for input_section in sections:
         if input_section not in sections_data.keys() and all_inputs_needed:
             return False, []
 
         if input_section in sections_data.keys():
-            inputs.append(data["trainings"][training]["sections"][input_section]["value"])
+            inputs.append(data["trainings"][training]["sections"][input_section])
     return True, inputs
 
 

@@ -2,6 +2,8 @@ import operator
 from dataclasses import dataclass, field
 from enum import StrEnum
 from math import ceil
+from typing import Any
+from libRunning.model.custom_reducers import grade_points
 
 
 @dataclass
@@ -13,7 +15,7 @@ class Filter:
         if self.operator not in ['<', '>', '==', '!=', '<=', '>=']:
             raise ValueError(f'Invalid operator {self.operator}')
 
-    def passed_value_through_filter(self, value: int) -> bool:
+    def passed_value_through_filter(self, value: dict[str, Any]) -> bool:
         d = {
             '<': operator.lt,
             '>': operator.gt,
@@ -22,11 +24,11 @@ class Filter:
             '<=': operator.le,
             '>=': operator.ge,
         }
-        output = d[self.operator](value, self.value)
+        output = d[self.operator](value["value"], self.value)
         assert isinstance(output, bool)
         return output
 
-    def passed_values_through_filter(self, values: list[int]) -> list[int]:
+    def passed_values_through_filter(self, values: list[dict[str, Any]]) -> list[dict[str, Any]]:
         return [value for value in values if self.passed_value_through_filter(value)]
 
     def __hash__(self) -> int:
@@ -51,25 +53,27 @@ class AggregationDesc:
     time_convertible: bool = True
     all_inputs_needed: bool = True
 
-    def apply_reducer(self, values: list[int]) -> int:
+    def apply_reducer(self, values: list[dict[str, Any]]) -> int:
         match self.reducer:
             case "sum":
-                return sum(values)
+                return sum(item["value"] for item in values)
             case "len":
                 return len(values)
             case "min":
-                return min(values)
+                return min(item["value"] for item in values)
             case "max":
-                return max(values)
+                return max(item["value"] for item in values)
             case "avg":
-                result = sum(values) / len(values)
-                int_result = sum(values) // len(values)
+                result = sum(item["value"] for item in values) / len(values)
+                int_result = sum(item["value"] for item in values) // len(values)
                 if result - int_result == 0.5:
                     return ceil(result)
                 return round(result)
+            case "grade_points":
+                return grade_points(values)
         return -1
 
-    def apply_filters(self, values: list[int]) -> list[int]:
+    def apply_filters(self, values: list[dict[str, Any]]) -> list[dict[str, Any]]:
         tmp = values
         if self.filters:
             for filter_ in self.filters:
