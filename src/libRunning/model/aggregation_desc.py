@@ -10,6 +10,7 @@ from libRunning.model.custom_reducers import grade_points
 class Filter:
     operator: str
     value: int
+    field: str = "value"
 
     def __post_init__(self) -> None:
         if self.operator not in ['<', '>', '==', '!=', '<=', '>=']:
@@ -24,7 +25,7 @@ class Filter:
             '<=': operator.le,
             '>=': operator.ge,
         }
-        output = d[self.operator](value["value"], self.value)
+        output = d[self.operator](value[self.field], self.value)
         assert isinstance(output, bool)
         return output
 
@@ -52,20 +53,21 @@ class AggregationDesc:
     sort_definition: SortDefinition = SortDefinition.LESS_IS_BEST
     time_convertible: bool = True
     all_inputs_needed: bool = True
+    compute_with_field: str = "value"
 
     def apply_reducer(self, values: list[dict[str, Any]]) -> int:
         match self.reducer:
             case "sum":
-                return sum(item["value"] for item in values)
+                return sum(item[self.compute_with_field] for item in values)
             case "len":
                 return len(values)
             case "min":
-                return min(item["value"] for item in values)
+                return min(item[self.compute_with_field] for item in values)
             case "max":
-                return max(item["value"] for item in values)
+                return max(item[self.compute_with_field] for item in values)
             case "avg":
-                result = sum(item["value"] for item in values) / len(values)
-                int_result = sum(item["value"] for item in values) // len(values)
+                result = sum(item[self.compute_with_field] for item in values) / len(values)
+                int_result = sum(item[self.compute_with_field] for item in values) // len(values)
                 if result - int_result == 0.5:
                     return ceil(result)
                 return round(result)

@@ -34,9 +34,14 @@ def read_index(index_file: Path, route: RouteModel, version: int = 1) -> IndexDa
             filters: list[dict] = operations.get("filters") or []
             filters_objs: list[Filter] = []
             for filter_ in filters:
+                field: str = "value"
+                if filter_.get("field") is not None:
+                    field = filter_["field"]
+
                 filters_objs.append(Filter(
                     operator=filter_["operator"],
                     value=filter_["value"],
+                    field=field,
                 ))
             sort_def: SortDefinition = SortDefinition.LESS_IS_BEST
             if agg_desc.get("sort_definition") is not None:
@@ -49,6 +54,10 @@ def read_index(index_file: Path, route: RouteModel, version: int = 1) -> IndexDa
             if agg_desc.get("all_inputs_needed") is not None:
                 all_inputs_needed = agg_desc["all_inputs_needed"]
 
+            field: str = "value"
+            if agg_desc.get("compute_with_field") is not None and agg_desc["compute_with_field"] != "value":
+                field = agg_desc["compute_with_field"]
+
             agg_obj = AggregationDesc(
                 name=aag_name,
                 inputs=agg_desc["inputs"],
@@ -57,6 +66,7 @@ def read_index(index_file: Path, route: RouteModel, version: int = 1) -> IndexDa
                 sort_definition=sort_def,
                 time_convertible=time_convertible,
                 all_inputs_needed=all_inputs_needed,
+                compute_with_field=field,
             )
             aggregations[aag_name] = agg_obj
     else:

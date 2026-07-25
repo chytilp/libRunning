@@ -74,6 +74,7 @@ def test_aggregation_desc_with_filters(filters: list[Filter], name: str, reducer
     result: int = agg_desc.apply_reducer(values)
     assert result == expected
 
+
 def test_aggregation_desc_with_grade_points_reducer() -> None:
     values: list[dict[str, Any]] = [{"value": 1, "grade": 1},
                                     {"value": 2, "grade": 2},
@@ -87,3 +88,41 @@ def test_aggregation_desc_with_grade_points_reducer() -> None:
     values = agg_desc.apply_filters(values)
     result: int = agg_desc.apply_reducer(values)
     assert result == 1 + 2 + 3 + 4
+
+@pytest.mark.parametrize(
+    "filter, reducer, expected",
+    (
+        pytest.param(Filter("<", 3, field="grade"), "len", 4, id="len<3"),
+        pytest.param(Filter("<", 3, field="grade"), "sum", 5, id="sum<3"),
+        pytest.param(Filter("<=", 3, field="grade"), "len", 5, id="len<=3"),
+        pytest.param(Filter("<=", 3, field="grade"), "min", 1, id="min<=3"),
+        pytest.param(Filter(">", 3, field="grade"), "len", 4, id="len>3"),
+        pytest.param(Filter(">", 3, field="grade"), "max", 5, id="max>3"),
+        pytest.param(Filter(">=", 3, field="grade"), "len", 5, id="len>=3"),
+        pytest.param(Filter(">=", 3, field="grade"), "avg", 4, id="avg>=3"),
+    )
+)
+def test_aggregation_desc_with_field_grade(filter: Filter, reducer: str, expected: int) -> None:
+    values: list[dict[str, Any]] = [
+        {"value": 9, "grade": 1},
+        {"value": 10, "grade": 1},
+        {"value": 20, "grade": 2},
+        {"value": 10, "grade": 1},
+        {"value": 30, "grade": 3},
+        {"value": 38, "grade": 4},
+        {"value": 40, "grade": 4},
+        {"value": 50, "grade": 5},
+        {"value": 49, "grade": 5},]
+
+    filters: list[Filter] = [
+        filter,
+    ]
+    agg_desc = AggregationDesc(
+        reducer=reducer,
+        name="greenAndYellow",
+        filters=filters,
+        compute_with_field="grade",
+    )
+    values = agg_desc.apply_filters(values)
+    result: int = agg_desc.apply_reducer(values)
+    assert result == expected
