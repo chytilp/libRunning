@@ -1,3 +1,4 @@
+from __future__ import annotations
 import operator
 from dataclasses import dataclass, field
 from enum import StrEnum
@@ -85,3 +86,19 @@ class AggregationDesc:
     @property
     def reverse(self) -> bool:
         return self.sort_definition == SortDefinition.MORE_IS_BEST
+
+    @property
+    def is_it_template(self) -> bool:
+        return self.name.startswith("@")
+
+    def copy(self, inputs: list[str], name: str) -> AggregationDesc:
+        return AggregationDesc(
+            name=name,
+            reducer=self.reducer,
+            inputs=inputs,
+            filters=self.filters,
+            sort_definition=self.sort_definition,
+            time_convertible=self.time_convertible,
+            all_inputs_needed=self.all_inputs_needed,
+            compute_with_field=self.compute_with_field,
+        )

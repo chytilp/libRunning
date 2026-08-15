@@ -17,9 +17,9 @@ from libRunning.model.printing import (
 )
 
 
-def _prepare_data(route: RouteModel, from_: str, to_: str) -> dict[str, Any]:
+def _prepare_data(route: RouteModel, from_: str, to_: str, version: int) -> dict[str, Any]:
     config = get_config()
-    index_data = read_index(index_file=config.get_index_file_path(), route=route, version=2)
+    index_data = read_index(index_file=config.get_index_file_path(), route=route, version=version)
     return prepare_data(index_data=index_data, from_=from_, to_=to_)
 
 
@@ -31,14 +31,14 @@ def _merge(data_1: dict[tuple[str, str], dict[str, Any]], data_2: dict[tuple[str
     return output
 
 
-def get_routes() -> list[RouteModel]:
+def get_routes(version: int = 3) -> list[RouteModel]:
     config = get_config()
-    routes = read_index_routes(config.get_index_file_path())
+    routes = read_index_routes(config.get_index_file_path(), version)
     return routes
 
 
-def get_dates(route: RouteModel) -> TrainingsModel:
-    data: dict[str, Any] = _prepare_data(route=route, from_="", to_="")
+def get_dates(route: RouteModel, version: int = 3) -> TrainingsModel:
+    data: dict[str, Any] = _prepare_data(route=route, from_="", to_="", version=version)
     dates: list[str] = [date for date in data["trainings"].keys()]
     return TrainingsModel(dates=dates)
 
@@ -55,15 +55,16 @@ def _get_training_data(data: dict[str, Any], date: str) -> TrainingModel:
     return TrainingModel(date=date, note=data.get("note"), sections=sections, aggregations=aggregations)
 
 
-def get_date(route: RouteModel, date: str) -> TrainingModel:
-    data: dict[str, Any] = _prepare_data(route=route, from_="", to_="")
+def get_date(route: RouteModel, date: str, version: int = 3) -> TrainingModel:
+    data: dict[str, Any] = _prepare_data(route=route, from_="", to_="", version=version)
     date_data = get(data, ["trainings", date])
     return _get_training_data(data=date_data, date=date)
 
 
-def get_section(route: RouteModel, section: str, from_: str = "", to_: str = "", mark_date: str = "") -> SectionsModel:
+def get_section(route: RouteModel, section: str, from_: str = "", to_: str = "", mark_date: str = "",
+                version: int = 3) -> SectionsModel:
     section = section.lower()
-    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_)
+    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_, version=version)
     data = get(data, ["trainings", "*", "sections", section])
     data = dict(sorted(data.items(), key=lambda item: item[1]["order"]))
     date_sections: dict[str, SectionModel] = {}
@@ -82,20 +83,20 @@ def _get_items(data : dict[str, Any], path: list[str]) -> list[str]:
 
     return items
 
-def get_sections(route: RouteModel, from_: str = "", to_: str = "") -> list[str]:
-    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_)
+def get_sections(route: RouteModel, from_: str = "", to_: str = "", version: int = 3) -> list[str]:
+    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_, version=version)
     return _get_items(data=data, path=["trainings", "*", "sections", "key"])
 
 
-def get_aggregations(route: RouteModel, from_: str = "", to_: str = "") -> list[str]:
-    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_)
+def get_aggregations(route: RouteModel, from_: str = "", to_: str = "", version: int = 3) -> list[str]:
+    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_, version=version)
     return _get_items(data=data, path=["trainings", "*", "aggregations", "key"])
 
 
-def get_aggregation(route: RouteModel, aggregation: str, from_: str = "", to_: str = "", mark_date: str = ""
-                    ) -> SectionsModel:
+def get_aggregation(route: RouteModel, aggregation: str, from_: str = "", to_: str = "",
+                    mark_date: str = "", version: int = 3) -> SectionsModel:
     aggregation = aggregation.lower()
-    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_)
+    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_, version=version)
     data = get(data, ["trainings", "*", "aggregations", aggregation])
     data = dict(sorted(data.items(), key=lambda item: item[1]["order"]))
     date_aggregations: dict[str, SectionModel] = {}
@@ -118,22 +119,24 @@ def _get_grades(data: dict[str, Any], key: str, section_name: str) -> list[Grade
     return grades_list
 
 
-def get_section_grades(route: RouteModel, section_name: str, from_: str = "", to_: str = "") -> list[GradeModel]:
+def get_section_grades(route: RouteModel, section_name: str, from_: str = "", to_: str = "",
+                       version: int = 3) -> list[GradeModel]:
     section_name = section_name.lower()
-    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_)
+    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_, version=version)
     return _get_grades(data=data, key="section_grades", section_name=section_name)
 
 
-def get_aggregation_grades(route: RouteModel, aggregation_name: str, from_: str = "", to_: str = "") -> list[GradeModel]:
+def get_aggregation_grades(route: RouteModel, aggregation_name: str, from_: str = "", to_: str = "",
+                           version: int = 3) -> list[GradeModel]:
     aggregation_name = aggregation_name.lower()
-    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_)
+    data: dict[str, Any] = _prepare_data(route=route, from_=from_, to_=to_, version=version)
     return _get_grades(data=data, key="aggregation_grades", section_name=aggregation_name)
 
 
 def get_dashboard(route: RouteModel, from_: str = "", to_: str = "", sections: list[str] | None = None,
-                  aggregations: list[str] | None = None) -> DashboardModel:
+                  aggregations: list[str] | None = None, version: int = 3) -> DashboardModel:
     config = get_config()
-    index_data = read_index(index_file=config.get_index_file_path(), route=route, version=2)
+    index_data = read_index(index_file=config.get_index_file_path(), route=route, version=version)
     if sections is None:
         sections = index_data.dashboard_sections
     if aggregations is None:
@@ -160,8 +163,8 @@ def get_dashboard(route: RouteModel, from_: str = "", to_: str = "", sections: l
     return DashboardModel(data=output_data, sections=sections, aggregations=aggregations)
 
 
-def get_compare(route: RouteModel, date_1: str, date_2: str) -> CompareModel:
-    data: dict[str, Any] = _prepare_data(route=route, from_="", to_="")
+def get_compare(route: RouteModel, date_1: str, date_2: str, version: int = 3) -> CompareModel:
+    data: dict[str, Any] = _prepare_data(route=route, from_="", to_="", version=version)
     date1_data = get(data, ["trainings", date_1])
     date1_obj = _get_training_data(data=date1_data, date=date_1)
     date2_data = get(data, ["trainings", date_2])
@@ -172,13 +175,13 @@ def get_compare(route: RouteModel, date_1: str, date_2: str) -> CompareModel:
     )
 
 
-def get_dashboard_sections(route: RouteModel) -> list[str]:
+def get_dashboard_sections(route: RouteModel, version: int = 3) -> list[str]:
     config = get_config()
-    index_data = read_index(index_file=config.get_index_file_path(), route=route, version=2)
+    index_data = read_index(index_file=config.get_index_file_path(), route=route, version=version)
     return index_data.dashboard_sections
 
 
-def get_dashboard_aggregations(route: RouteModel) -> list[str]:
+def get_dashboard_aggregations(route: RouteModel, version: int = 3) -> list[str]:
     config = get_config()
-    index_data = read_index(index_file=config.get_index_file_path(), route=route, version=2)
+    index_data = read_index(index_file=config.get_index_file_path(), route=route, version=version)
     return index_data.dashboard_aggregations
