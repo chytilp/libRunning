@@ -47,7 +47,7 @@ def test_new_format() -> None:
 
 def test_index_routes() -> None:
     path = Path(__file__).parent / "data" / "indexNew.json"
-    routes = read_index_routes(path)
+    routes = read_index_routes(path, version=2)
     assert len(routes) == 1
     assert routes[0] == RouteModel(name="barr", description="")
 

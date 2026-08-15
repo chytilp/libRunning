@@ -8,7 +8,7 @@ from libRunning.model.index_data import IndexData
 from libRunning.model.printing import RouteModel
 
 
-def read_index_routes(index_file: Path, version: int = 2) -> list[RouteModel]:
+def read_index_routes(index_file: Path, version: int) -> list[RouteModel]:
     index_data = json.load(open(index_file))
     routes: list[RouteModel] = []
     if version < 3:
@@ -105,7 +105,7 @@ def read_index_v3(index_file: Path, route: RouteModel, version: int) -> IndexDat
     )
 
 
-def read_index(index_file: Path, route: RouteModel, version: int = 1) -> IndexData:
+def read_index(index_file: Path, route: RouteModel, version: int) -> IndexData:
     if version >= 3:
         return read_index_v3(index_file, route, version)
 
