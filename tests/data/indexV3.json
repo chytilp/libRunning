@@ -1,0 +1,65 @@
+{
+  "generic_aggregations": "./tests/data/common_aggregations.json",
+  "routes": {
+    "tich": {
+      "type": "tich",
+      "description": "Osada ticha",
+      "files": [
+        "/home/pchytil/data/running/tich.json"
+      ],
+      "sections": ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km", "9.km", "10.km", "11.km"],
+      "aggregations": {
+        "total": {
+          "basedOn": "@sum-values",
+          "inputs": ["*"]
+        },
+        "ten": {
+          "basedOn": "@sum-values",
+          "inputs": ["1.km", "2.km", "3.km", "4.km", "5.km", "7.km", "8.km", "9.km", "10.km", "11.km"]
+        },
+        "first5": {
+          "basedOn": "@sum-values",
+          "inputs": ["1.km", "2.km", "3.km", "4.km", "5.km"]
+        },
+        "last5": {
+          "basedOn": "@sum-values",
+          "inputs": ["7.km", "8.km", "9.km", "10.km", "11.km"]
+        },
+        "down3": {
+          "basedOn": "@sum-values",
+          "inputs": ["4.km", "5.km", "6.km"]
+        },
+        "down2": {
+          "basedOn": "@sum-values",
+          "inputs": ["4.km", "5.km"]
+        },
+        "up3": {
+          "basedOn": "@sum-values",
+          "inputs": ["6.km", "7.km", "8.km"]
+        },
+        "up2": {
+          "basedOn": "@sum-values",
+          "inputs": ["7.km", "8.km"]
+        },
+        "last3": {
+          "basedOn": "@sum-values",
+          "inputs": ["9.km", "10.km", "11.km"]
+        },
+        "first3": {
+          "basedOn": "@sum-values",
+          "inputs": ["1.km", "2.km", "3.km"]
+        },
+        "in-top5": {
+          "basedOn": "@in-top5",
+          "inputs": ["1.km", "2.km", "3.km", "4.km", "5.km", "7.km", "8.km", "9.km", "10.km", "11.km"]
+        },
+        "less-than-10sec": {
+          "basedOn": "@less-than-10sec",
+          "inputs": ["1.km", "2.km", "3.km", "4.km", "5.km", "7.km", "8.km", "9.km", "10.km", "11.km"]
+        }
+      },
+      "dashboard_sections": ["*"],
+      "dashboard_aggregations": ["down2", "up2", "ten"]
+    }
+  }
+}

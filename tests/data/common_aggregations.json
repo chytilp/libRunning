@@ -1,0 +1,60 @@
+{
+  "@in-top5": {
+    "operations": {
+       "filters": [{"operator": "<=", "value": 5, "field": "order"}],
+       "reducer": "len"
+    },
+    "sort_definition": "more_is_best",
+    "time_convertible": false,
+    "compute_with_field": "order",
+    "all_inputs_needed": false
+  },
+  "@less-than-10sec": {
+    "operations": {
+      "filters": [{"operator": "<=", "value": 10, "field": "lost"}],
+      "reducer": "len"
+    },
+    "sort_definition": "more_is_best",
+    "time_convertible": false,
+    "compute_with_field": "lost",
+    "all_inputs_needed": false
+  },
+  "@under6": {
+    "operations": {
+      "reducer": "len",
+      "filters": [{"operator": "<", "value": 360}]
+    },
+    "sort_definition": "more_is_best",
+    "time_convertible": false,
+    "compute_with_field": "value",
+    "all_inputs_needed": false
+  },
+  "@grade-points": {
+    "operations": {
+      "reducer": "grade_points"
+    },
+    "sort_definition": "more_is_best",
+    "time_convertible": false,
+    "compute_with_field": "grade",
+    "all_inputs_needed": false
+  },
+  "@better-than-blue": {
+    "operations": {
+      "filters": [{"operator": "<", "value": 3, "field": "grade"}],
+      "reducer": "len"
+    },
+    "sort_definition": "more_is_best",
+    "time_convertible": false,
+    "compute_with_field": "grade",
+    "all_inputs_needed": false
+  },
+  "@sum-values": {
+    "operations": {
+      "reducer": "sum"
+    },
+    "sort_definition": "less_is_best",
+    "time_convertible": true,
+    "compute_with_field": "value",
+    "all_inputs_needed": true
+  }
+}

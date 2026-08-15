@@ -47,6 +47,34 @@ def test_new_format() -> None:
 
 def test_index_routes() -> None:
     path = Path(__file__).parent / "data" / "indexNew.json"
-    routes = read_index_routes(path)
+    routes = read_index_routes(path, version=2)
     assert len(routes) == 1
     assert routes[0] == RouteModel(name="barr", description="")
+
+
+def test_index_v3_routes() -> None:
+    path = Path(__file__).parent / "data" / "indexV3.json"
+    routes = read_index_routes(path, version=3)
+    assert len(routes) == 1
+    assert routes[0] == RouteModel(name="tich", description="Osada ticha")
+
+
+def test_v3_index_format() -> None:
+    route = RouteModel(name="tich", description="")
+    path = Path(__file__).parent / "data" / "indexV3.json"
+    index_data = read_index(path, route, 3)
+    assert index_data.files == ["/home/pchytil/data/running/tich.json"]
+    assert list(index_data.aggregations.keys()) == ["total", "ten", "first5", "last5", "down3", "down2",
+                                                    "up3", "up2", "last3", "first3", "in-top5",
+                                                    "less-than-10sec"]
+    all_sections = ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km", "9.km", "10.km", "11.km"]
+    assert index_data.version == 3
+    assert index_data.dashboard_sections == all_sections
+    assert index_data.dashboard_aggregations == ["down2", "up2", "ten"]
+    total_agg = index_data.aggregations["total"]
+    assert total_agg.inputs == all_sections
+    assert total_agg.reducer == "sum"
+    assert total_agg.sort_definition == SortDefinition.LESS_IS_BEST
+    assert total_agg.time_convertible == True
+    assert total_agg.compute_with_field == "value"
+    assert total_agg.all_inputs_needed == True

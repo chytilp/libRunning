@@ -1,6 +1,6 @@
 [project]
 name = "libRunning"
-version = "0.0.1"
+version = "0.0.2"
 description = "Running app library functions"
 readme = "README.md"
 authors = [
