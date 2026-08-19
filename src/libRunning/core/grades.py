@@ -1,7 +1,7 @@
 import math
 from typing import Any
 
-from libRunning.model.aggregation_desc import AggregationDesc
+from libRunning.model.aggregation_desc import AggregationDesc, SortDefinition
 from libRunning.model.grade import Grade, Grades
 
 
@@ -31,10 +31,20 @@ def calculate_section_grades(sorted_section: list[tuple[str, int]], aggregation:
     grades.add(Grade(grade=3, from_=first + (2 * step), to_=first + (3 * step)))
     grades.add(Grade(grade=4, from_=first + (3 * step), to_=first + (4 * step)))
     grades.add(Grade(grade=5, from_=first + (4 * step), to_=last - 1 if reverse else last + 1))
+    if aggregation is not None:
+        grades.less_is_best = (aggregation.sort_definition == SortDefinition.LESS_IS_BEST)
     return grades
 
 
-def update_section_or_aggregation_grades(data: dict[str, Any], type_: str, key: str, grades: dict[int, tuple[int, int]]) -> dict[str, Any]:
+def update_section_grades(data: dict[str, Any], type_: str, key: str, grades: dict[int, tuple[int, int]]
+                                         ) -> dict[str, Any]:
+    # key = "section_grades" if not is_aggregation else "aggregation_grades"
+    data[key][type_] = grades
+    return data
+
+
+def update_aggregation_grades(data: dict[str, Any], type_: str, key: str, grades: dict[int, tuple[int, int, bool]]
+                                         ) -> dict[str, Any]:
     # key = "section_grades" if not is_aggregation else "aggregation_grades"
     data[key][type_] = grades
     return data

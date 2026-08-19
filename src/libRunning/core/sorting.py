@@ -31,7 +31,8 @@ def compare_section_or_aggregation(sorted_values: list[tuple[str, int]], grades:
         if grade is None:
             raise ValueError(f"Value: {value} cannot have None grade. Grades: {grades}")
 
-        output[date] = SortResult(order=order, lost=lost, grade=grade, time_convertible=grades.time_convertible)
+        output[date] = SortResult(order=order, lost=lost, grade=grade, time_convertible=grades.time_convertible,
+                                  less_is_best=grades.less_is_best)
 
     return output
 
@@ -45,4 +46,5 @@ def update_section_or_aggregation_data(data: dict[str, Any], type_: str, key: st
         sub_root["lost"] = value.lost
         sub_root["grade"] = value.grade
         sub_root["time_convertible"] = value.time_convertible
+        sub_root["less_is_best"] = value.less_is_best
     return data

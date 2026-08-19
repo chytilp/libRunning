@@ -15,7 +15,8 @@ from libRunning.core.data_module import data
 from libRunning.core.data_module import data as original_data
 from libRunning.core.grades import (
     calculate_grades,
-    update_section_or_aggregation_grades,
+    update_aggregation_grades,
+    update_section_grades,
 )
 from libRunning.core.sorting import (
     compare_section_or_aggregation,
@@ -112,7 +113,7 @@ def sort_aggregation(data: dict[str, Any], aggregation: AggregationDesc) -> dict
     sorted_agg_values = get_sorted_section_or_aggregation_values(data, aggregation.name, "aggregations",
                                                                  reverse=aggregation.reverse)
     grades = calculate_grades(sorted_agg_values, aggregation)
-    new_data = update_section_or_aggregation_grades(data, aggregation.name, "aggregation_grades", grades.get_dict())
+    new_data = update_aggregation_grades(data, aggregation.name, "aggregation_grades", grades.get_aggregation_dict())
     sort_result = compare_section_or_aggregation(sorted_agg_values, grades)
     new_data = update_section_or_aggregation_data(new_data, aggregation.name, "aggregations", sort_result)
     return new_data
@@ -121,7 +122,7 @@ def sort_aggregation(data: dict[str, Any], aggregation: AggregationDesc) -> dict
 def sort_section(data: dict[str, Any], section: str) -> dict[str, Any]:
     sorted_section_values = get_sorted_section_or_aggregation_values(data, section, "sections")
     grades = calculate_grades(sorted_section_values)
-    new_data = update_section_or_aggregation_grades(data, section, "section_grades", grades.get_dict())
+    new_data = update_section_grades(data, section, "section_grades", grades.get_section_dict())
     sort_result = compare_section_or_aggregation(sorted_section_values, grades)
     new_data = update_section_or_aggregation_data(new_data, section, "sections", sort_result)
     return new_data

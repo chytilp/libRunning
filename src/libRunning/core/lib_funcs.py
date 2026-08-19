@@ -110,12 +110,15 @@ def _get_grades(data: dict[str, Any], key: str, section_name: str) -> list[Grade
     grades = get(data, [key, section_name])
     grades_list: list[GradeModel] = []
     for grade, grade_data in grades.items():
-        grades_list.append(GradeModel(
+        g_model = GradeModel(
             grade=grade,
             from_=grade_data[0],
             to_=grade_data[1],
-            time_convertible=True,
-        ))
+        )
+        if key.startswith("aggregation_"):
+            g_model.time_convertible = grade_data[2]
+
+        grades_list.append(g_model)
     return grades_list
 
 

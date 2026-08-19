@@ -6,7 +6,7 @@ from libRunning.core.auxiliary import get_sorted_section_or_aggregation_values
 from libRunning.core.grades import (
     calculate_grades,
     calculate_section_grades,
-    update_section_or_aggregation_grades,
+    update_section_grades,
 )
 from libRunning.model.grade import Grades
 
@@ -160,6 +160,6 @@ def test_calculate_section_and_update_data() -> None:
     section = "1.km"
     sorted_values = get_sorted_section_or_aggregation_values(data_, section, "sections")
     grades = calculate_grades(sorted_values)
-    new_data = update_section_or_aggregation_grades(data_, section, "section_grades", grades.get_dict())
+    new_data = update_section_grades(data_, section, "section_grades", grades.get_section_dict())
     root = new_data["section_grades"][section]
     assert_grades_dict(root)

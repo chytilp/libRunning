@@ -7,6 +7,7 @@ class SortResult:
     lost: int
     grade: int
     time_convertible: bool = True
+    less_is_best: bool = True
 
     def __post_init__(self) -> None:
         if self.grade not in [-1, 1, 2, 3, 4, 5]:

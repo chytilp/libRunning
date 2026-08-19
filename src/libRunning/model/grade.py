@@ -26,6 +26,7 @@ class Grade:
 class Grades:
     grades: dict[int, Grade] = field(default_factory=dict)
     time_convertible: bool = True
+    less_is_best: bool = True
 
     @property
     def empty(self) -> bool:
@@ -73,7 +74,16 @@ class Grades:
 
         return self.grades[5]
 
-    def get_dict(self) -> dict[int, tuple[int, int]]:
+    def get_aggregation_dict(self) -> dict[int, tuple[int, int, bool]]:
+        return {
+            1: (self.grade_1().from_, self.grade_1().to_, self.time_convertible),
+            2: (self.grade_2().from_, self.grade_2().to_, self.time_convertible),
+            3: (self.grade_3().from_, self.grade_3().to_, self.time_convertible),
+            4: (self.grade_4().from_, self.grade_4().to_, self.time_convertible),
+            5: (self.grade_5().from_, self.grade_5().to_, self.time_convertible),
+        }
+
+    def get_section_dict(self) -> dict[int, tuple[int, int]]:
         return {
             1: (self.grade_1().from_, self.grade_1().to_),
             2: (self.grade_2().from_, self.grade_2().to_),

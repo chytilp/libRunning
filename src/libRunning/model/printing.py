@@ -29,6 +29,7 @@ class SectionModel:
     grade: int
     lost: int
     time_convertible: bool
+    less_is_best: bool = True
 
     @staticmethod
     def from_dict(name: str, data: dict[str, Any]) -> SectionModel:
@@ -58,7 +59,7 @@ class GradeModel:
     grade: int
     from_: int
     to_: int
-    time_convertible: bool
+    time_convertible: bool = True
 
 
 @dataclass
