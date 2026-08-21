@@ -36,7 +36,9 @@ class Filter:
     def __hash__(self) -> int:
         return hash(f"{self.operator},{self.value}")
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Filter):
+            return False
         return hash(self) == hash(other)
 
 
@@ -56,7 +58,7 @@ class AggregationDesc:
     all_inputs_needed: bool = True
     compute_with_field: str = "value"
 
-    def apply_reducer(self, values: list[dict[str, Any]]) -> int:
+    def apply_reducer(self, values: list[dict[str, int]]) -> int:
         match self.reducer:
             case "sum":
                 return sum(item[self.compute_with_field] for item in values)

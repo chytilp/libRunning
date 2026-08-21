@@ -1,11 +1,15 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
+from decimal import Decimal
 
 
 @dataclass
 class Grade:
     grade: int
-    from_: int
-    to_: int
+    from_: Decimal
+    to_: Decimal
+    time_convertible: bool = True
 
     @property
     def reverse(self) -> bool:
@@ -18,8 +22,17 @@ class Grade:
             return self.from_ >= value > self.to_
 
     @property
-    def tuple(self) -> tuple[int, int]:
+    def tuple(self) -> tuple[Decimal, Decimal]:
         return self.from_, self.to_
+
+    @staticmethod
+    def _convert_to_decimal(value: int) -> Decimal:
+        return Decimal(str(value))
+
+    @staticmethod
+    def create(grade: int, from_: int, to_: int, time_convertible: bool = True) -> Grade:
+        return Grade(grade, Grade._convert_to_decimal(from_), Grade._convert_to_decimal(to_),
+                     time_convertible)
 
 
 @dataclass
@@ -74,7 +87,7 @@ class Grades:
 
         return self.grades[5]
 
-    def get_aggregation_dict(self) -> dict[int, tuple[int, int, bool]]:
+    def get_aggregation_dict(self) -> dict[int, tuple[Decimal, Decimal, bool]]:
         return {
             1: (self.grade_1().from_, self.grade_1().to_, self.time_convertible),
             2: (self.grade_2().from_, self.grade_2().to_, self.time_convertible),
@@ -83,7 +96,7 @@ class Grades:
             5: (self.grade_5().from_, self.grade_5().to_, self.time_convertible),
         }
 
-    def get_section_dict(self) -> dict[int, tuple[int, int]]:
+    def get_section_dict(self) -> dict[int, tuple[Decimal, Decimal]]:
         return {
             1: (self.grade_1().from_, self.grade_1().to_),
             2: (self.grade_2().from_, self.grade_2().to_),

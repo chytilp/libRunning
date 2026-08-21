@@ -49,7 +49,7 @@ def _read_aggregation_templates(file_path: Path) -> dict[str, AggregationDesc]:
         if agg_desc.get("all_inputs_needed") is not None:
             all_inputs_needed = agg_desc["all_inputs_needed"]
 
-        field: str = "value"
+        field = "value"
         if agg_desc.get("compute_with_field") is not None and agg_desc["compute_with_field"] != "value":
             field = agg_desc["compute_with_field"]
 
@@ -145,7 +145,7 @@ def read_index(index_file: Path, route: RouteModel, version: int) -> IndexData:
             if agg_desc.get("all_inputs_needed") is not None:
                 all_inputs_needed = agg_desc["all_inputs_needed"]
 
-            field: str = "value"
+            field = "value"
             if agg_desc.get("compute_with_field") is not None and agg_desc["compute_with_field"] != "value":
                 field = agg_desc["compute_with_field"]
 

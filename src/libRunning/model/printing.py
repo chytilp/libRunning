@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from decimal import Decimal
 from typing import Any
 
 
@@ -12,7 +13,9 @@ class RouteModel:
     def __hash__(self) -> int:
         return hash(f"{self.name},{self.description}")
 
-    def __eq__(self, other: RouteModel) -> bool:
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, RouteModel):
+            return False
         return hash(self) == hash(other)
 
 
@@ -57,8 +60,8 @@ class SectionsModel:
 @dataclass
 class GradeModel:
     grade: int
-    from_: int
-    to_: int
+    from_: Decimal
+    to_: Decimal
     time_convertible: bool = True
 
 

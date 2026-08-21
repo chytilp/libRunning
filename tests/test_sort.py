@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from libRunning.core.auxiliary import get_sorted_section_or_aggregation_values
 from libRunning.core.functions import sort_aggregations, sort_sections
 from libRunning.core.grades import calculate_grades
@@ -182,6 +184,7 @@ def test_sort_aggregation_more_is_best() -> None:
     assert root["2026-02-04"]["aggregations"]["under5:30"] == {"value": 4, "order": 2, "lost": 1, "grade": 2, "time_convertible": False, "less_is_best": False}
     assert root["2026-02-05"]["aggregations"]["under5:30"] == {"value": 5, "order": 1, "lost": 0, "grade": 1, "time_convertible": False, "less_is_best": False}
     assert "under5:30" in list(result["aggregation_grades"].keys())
-    assert result["aggregation_grades"]["under5:30"] == {1: (5, 4, False), 2: (4, 3, False), 3: (3, 2, False),
-                                                         4: (2, 1, False), 5: (1, 0, False)}
+    assert result["aggregation_grades"]["under5:30"] == {1: (Decimal("5"), Decimal("4.2"), False), 2: (Decimal("4.2"), Decimal("3.4"), False),
+                                                         3: (Decimal("3.4"), Decimal("2.6"), False), 4: (Decimal("2.6"), Decimal("1.8"), False),
+                                                         5: (Decimal("1.8"), Decimal("0.9"), False)}
     assert id(data_3) != id(result)
