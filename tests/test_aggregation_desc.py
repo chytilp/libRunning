@@ -2,7 +2,7 @@ from typing import Any
 
 import pytest
 
-from libRunning.model.aggregation_desc import AggregationDesc, Filter
+from libRunning.model.aggregation_desc import AggregationDesc, Filter # , SortDefiniton
 
 
 @pytest.mark.parametrize(
@@ -88,6 +88,28 @@ def test_aggregation_desc_with_grade_points_reducer() -> None:
     values = agg_desc.apply_filters(values)
     result: int = agg_desc.apply_reducer(values)
     assert result == 1 + 2 + 3 + 4
+
+@pytest.mark.parametrize(
+    "collection, expected_result",
+    (
+        ([{"value": 3}, {"value": 2}, {"value": 1}], 2),
+        ([{"value": 3}, {"value": 2}, {"value": 1}, {"value": 5}], 3),
+        ([{"value": 4}, {"value": 4}, {"value": 1}, {"value": 5}], 4),
+    )
+)
+def test_median_aggregation(collection: list[dict], expected_result: int) -> None:
+    agg_desc = AggregationDesc(
+        reducer="median",
+        name="custom reducer",
+        # sort_definition=SortDefiniton.LESS_IS_BEST,
+        time_convertible=False,
+        all_inputs_needed=False,
+        compute_with_field="value"
+    )
+    values = agg_desc.apply_filters(collection)
+    result: int = agg_desc.apply_reducer(values)
+    assert result == expected_result
+
 
 @pytest.mark.parametrize(
     "filter, reducer, expected",

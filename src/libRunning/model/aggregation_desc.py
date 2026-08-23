@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from math import ceil
 from typing import Any
-from libRunning.model.custom_reducers import grade_points
+from libRunning.model.custom_reducers import grade_points, median
 
 
 @dataclass
@@ -74,6 +74,9 @@ class AggregationDesc:
                 if result - int_result == 0.5:
                     return ceil(result)
                 return round(result)
+            case "median":
+                collection: list[int] = [item[self.compute_with_field] for item in values]
+                return median(collection)
             case "grade_points":
                 return grade_points(values)
         return -1
