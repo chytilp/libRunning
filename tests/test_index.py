@@ -78,3 +78,4 @@ def test_v3_index_format() -> None:
     assert total_agg.time_convertible == True
     assert total_agg.compute_with_field == "value"
     assert total_agg.all_inputs_needed == True
+    assert total_agg.path == "time"

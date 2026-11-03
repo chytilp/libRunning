@@ -57,6 +57,7 @@ class AggregationDesc:
     time_convertible: bool = True
     all_inputs_needed: bool = True
     compute_with_field: str = "value"
+    path: str = "time"
 
     def apply_reducer(self, values: list[dict[str, int]]) -> int:
         match self.reducer:

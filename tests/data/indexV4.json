@@ -1,0 +1,74 @@
+{
+  "data_folder": "./tests/data/",
+  "generic_aggregations": "common_aggregations.json",
+  "routes": {
+    "tich": {
+      "type": "tich",
+      "description": "Osada ticha",
+      "files": [
+        "tich.json"
+      ],
+      "paths": [
+        "time",
+        "tf"
+      ],
+      "sections": [
+        "1.km",
+        "2.km",
+        "3.km",
+        "4.km",
+        "5.km",
+        "6.km",
+        "7.km",
+        "8.km",
+        "9.km",
+        "10.km",
+        "11.km"
+      ],
+      "section_props": {
+        "time": {
+          "sort_definition": "less_is_best",
+          "time_convertible": true
+        },
+        "tf": {
+          "sort_definition": "less_is_best",
+          "time_convertible": false
+        }
+      },
+      "aggregations": {
+        "total": {
+          "basedOn": "@sum-values",
+          "path": "time",
+          "inputs": [
+            "*"
+          ]
+        },
+        "ten": {
+          "basedOn": "@sum-values",
+          "path": "time",
+          "inputs": [
+            "1.km",
+            "2.km",
+            "3.km",
+            "4.km",
+            "5.km",
+            "7.km",
+            "8.km",
+            "9.km",
+            "10.km",
+            "11.km"
+          ]
+        }
+      },
+      "dashboard_sections": [
+        "*"
+      ],
+      "dashboard_aggregations": {
+        "time": [
+          "total",
+          "ten"
+        ]
+      }
+    }
+  }
+}
