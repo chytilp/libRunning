@@ -4,7 +4,7 @@ from typing import Any
 
 from libRunning.config import Config
 from libRunning.model.aggregation_desc import AggregationDesc, Filter, SortDefinition
-from libRunning.model.index_data import IndexData
+from libRunning.model.index_data import IndexData, IndexDataV2
 from libRunning.model.printing import RouteModel
 
 
@@ -105,9 +105,45 @@ def read_index_v3(index_file: Path, route: RouteModel, version: int) -> IndexDat
     )
 
 
+def read_index_v4(index_file: Path, route: RouteModel, version: int) -> IndexData:
+    index_data = json.load(open(index_file))
+    data_folder: str = index_data["data_folder"]
+    generic_aggs_path: str = index_data["generic_aggregations"]
+    aliases: dict[str, Any] = index_data["aliases"]
+
+    agg_templates = _read_aggregation_templates(Path(data_folder + generic_aggs_path).resolve())
+    for template in agg_templates.values():
+        print(f"template {template.name}")
+
+    routes_root = index_data["routes"]
+    #
+    files: list[str] = routes_root[route.name]["files"]
+    # sections: list[str] = routes_root[route.name]["sections"]
+    # dashboard_sections: list[str] = _fix_asterisk(routes_root[route.name]["dashboard_sections"], sections)
+    # dashboard_aggregations: list[str] = routes_root[route.name]["dashboard_aggregations"]
+    # aggregations: dict[str, AggregationDesc] = {}
+    # for agg_name, agg_values in routes_root[route.name]["aggregations"].items():
+    #     if agg_values.get("basedOn") is not None:
+    #         agg_template = agg_templates[agg_values["basedOn"]]
+    #         inputs = _fix_asterisk(agg_values["inputs"], sections)
+    #         agg = agg_template.copy(inputs, agg_name)
+    #         aggregations[agg_name] = agg
+
+    return IndexData(
+        version=version,
+        files=files,
+        aggregations={},
+        sections=[],
+        dashboard_sections=[],
+        dashboard_aggregations=[],
+    )
+
+
 def read_index(index_file: Path, route: RouteModel, version: int) -> IndexData:
-    if version >= 3:
+    if version == 3:
         return read_index_v3(index_file, route, version)
+    elif version == 4:
+        return read_index_v4(index_file, route, version)
 
     index_data = json.load(open(index_file))
     if index_data.get(route.name) is None:

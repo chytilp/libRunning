@@ -1,10 +1,17 @@
 {
   "data_folder": "./tests/data/",
   "generic_aggregations": "common_aggregations.json",
+  "aliases": {
+    "@time-convertible-less-is-best": {"sort_definition": "less_is_best", "time_convertible": true},
+    "@not-time-convertible-less-is-best": {"sort_definition": "less_is_best", "time_convertible": false}
+  },
   "routes": {
     "tich": {
       "type": "tich",
       "description": "Osada ticha",
+      "aliases": {
+        "@all-time-sections": ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km", "9.km", "10.km", "11.km"]
+      },
       "files": [
         "tich.json"
       ],
@@ -12,36 +19,39 @@
         "time",
         "tf"
       ],
-      "sections": [
-        "1.km",
-        "2.km",
-        "3.km",
-        "4.km",
-        "5.km",
-        "6.km",
-        "7.km",
-        "8.km",
-        "9.km",
-        "10.km",
-        "11.km"
-      ],
-      "section_props": {
+      "sections": {
         "time": {
-          "sort_definition": "less_is_best",
-          "time_convertible": true
+          "1.km": "@time-convertible-less-is-best",
+          "2.km": "@time-convertible-less-is-best",
+          "3.km": "@time-convertible-less-is-best",
+          "4.km": "@time-convertible-less-is-best",
+          "5.km": "@time-convertible-less-is-best",
+          "6.km": "@time-convertible-less-is-best",
+          "7.km": "@time-convertible-less-is-best",
+          "8.km": "@time-convertible-less-is-best",
+          "9.km": "@time-convertible-less-is-best",
+          "10.km": "@time-convertible-less-is-best",
+          "11.km": "@time-convertible-less-is-best"
         },
         "tf": {
-          "sort_definition": "less_is_best",
-          "time_convertible": false
+          "1.km": "@not-time-convertible-less-is-best",
+          "2.km": "@not-time-convertible-less-is-best",
+          "3.km": "@not-time-convertible-less-is-best",
+          "4.km": "@not-time-convertible-less-is-best",
+          "5.km": "@not-time-convertible-less-is-best",
+          "6.km": "@not-time-convertible-less-is-best",
+          "7.km": "@not-time-convertible-less-is-best",
+          "8.km": "@not-time-convertible-less-is-best",
+          "9.km": "@not-time-convertible-less-is-best",
+          "10.km": "@not-time-convertible-less-is-best",
+          "11.km": "@not-time-convertible-less-is-best"
         }
       },
       "aggregations": {
         "total": {
           "basedOn": "@sum-values",
           "path": "time",
-          "inputs": [
-            "*"
-          ]
+          "inputs": "@all-time-sections"
         },
         "ten": {
           "basedOn": "@sum-values",
@@ -60,14 +70,24 @@
           ]
         }
       },
-      "dashboard_sections": [
-        "*"
-      ],
+      "constants": {
+        "tf": {
+          "constants/tp_max": "@not-time-convertible-less-is-best",
+          "constants/tp_avg": "@not-time-convertible-less-is-best"
+        }
+      },
+      "dashboard_sections": {
+        "time": "@all-time-sections",
+        "tf": "@all-time-sections"
+      },
       "dashboard_aggregations": {
         "time": [
           "total",
           "ten"
         ]
+      },
+      "dashboard_constants": {
+        "tf": ["constants/tp_max", "constants/tp_avg"]
       }
     }
   }

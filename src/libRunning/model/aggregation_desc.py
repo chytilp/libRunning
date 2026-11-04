@@ -45,6 +45,7 @@ class Filter:
 class SortDefinition(StrEnum):
     LESS_IS_BEST = "less_is_best"
     MORE_IS_BEST = "more_is_best"
+    DO_NOT_SORT = "do_not_sort"
 
 
 @dataclass
