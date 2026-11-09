@@ -1,5 +1,5 @@
 import json
-from copy import deepcopy
+from copy import copy, deepcopy
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -25,6 +25,53 @@ from libRunning.core.sorting import (
 from libRunning.model.aggregation_desc import AggregationDesc
 from libRunning.model.index_data import IndexData
 from libRunning.utils.time import to_sec
+
+def read_v2(data: dict[str, Any], files: list[str], from_: str = "", to_: str = "") -> dict[str, Any]:
+    new_data: dict[str, Any] = copy(data)
+    dt_from: datetime | None = try_parse_date(from_)
+    dt_to: datetime | None = try_parse_date(to_)
+    if dt_from is None:
+        dt_from = datetime(2020, 1, 1)
+    if dt_to is None:
+        dt_to = datetime.now()
+    file_data: dict[str, dict[str, Any]] = json.load(open(Path(files[0]).resolve()))
+
+    trainings = new_data["trainings"]
+    for date, values in file_data.items():
+        train_dt: datetime = parse_date(date)
+        training_key = train_dt.strftime("%Y-%m-%d")
+        disabled: bool | None = values.get("disabled")
+        if disabled is True:
+            continue
+
+        if dt_from <= train_dt <= dt_to:
+            has: dict = {"time": "time" in values.keys(), "tf": "tf" in values.keys()}
+
+            has_constants = "constants" in values.keys()
+            trainings[training_key] = {"note": ""}
+            for path in ["time", "tf"]:
+                if has[path]:
+                    trainings[training_key].update({path: {"sections": {}, "aggregations": {}}})
+
+            if has_constants:
+                trainings[training_key].update({"constants": {}})
+            # note
+            note = values.get("note")
+            if note is not None:
+                trainings[training_key]["note"] = note
+
+            for path in ["time", "tf"]:
+                if has[path]:
+                    for section, value in values[path].items():
+                        trainings[training_key][path]["sections"][section] = {"order": -1, "lost": -1, "grade": -1, "value": -1}
+                        if path == "time":
+                            trainings[training_key][path]["sections"][section]["value"] = to_sec(value)
+                        else:
+                            trainings[training_key][path]["sections"][section]["value"] = value
+            if has_constants:
+                trainings[training_key]["constants"] = values["constants"]
+
+    return new_data
 
 
 def read(data: dict[str, Any], files: list[str], from_: str = "", to_: str = "") -> dict[str, Any]:

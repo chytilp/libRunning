@@ -72,8 +72,8 @@
       },
       "constants": {
         "tf": {
-          "constants/tp_max": "@not-time-convertible-less-is-best",
-          "constants/tp_avg": "@not-time-convertible-less-is-best"
+          "constants/tf_max": "@not-time-convertible-less-is-best",
+          "constants/tf_avg": "@not-time-convertible-less-is-best"
         }
       },
       "dashboard_sections": {
@@ -87,7 +87,7 @@
         ]
       },
       "dashboard_constants": {
-        "tf": ["constants/tp_max", "constants/tp_avg"]
+        "tf": ["constants/tf_max", "constants/tf_avg"]
       }
     }
   }

@@ -4,7 +4,7 @@ from typing import Any
 
 from libRunning.config import Config
 from libRunning.model.aggregation_desc import AggregationDesc, Filter, SortDefinition
-from libRunning.model.index_data import IndexData, IndexDataV2
+from libRunning.model.index_data import IndexData, IndexDataV2, SectionProperties, PathProperties
 from libRunning.model.printing import RouteModel
 
 
@@ -92,7 +92,7 @@ def read_index_v3(index_file: Path, route: RouteModel, version: int) -> IndexDat
         if agg_values.get("basedOn") is not None:
             agg_template = agg_templates[agg_values["basedOn"]]
             inputs = _fix_asterisk(agg_values["inputs"], sections)
-            agg = agg_template.copy(inputs, agg_name)
+            agg = agg_template.copy(inputs, agg_name, "time")
             aggregations[agg_name] = agg
 
     return IndexData(
@@ -105,38 +105,86 @@ def read_index_v3(index_file: Path, route: RouteModel, version: int) -> IndexDat
     )
 
 
-def read_index_v4(index_file: Path, route: RouteModel, version: int) -> IndexData:
+def read_path_part_section_like(path: str, routes_root: dict[str, Any], route: str, aliases: dict[str, Any],
+                                part_name: str) -> dict[str, SectionProperties]:
+    sections: dict[str, SectionProperties] = {}
+    if path in routes_root[route][part_name]:
+        sections_dict: dict[str, Any] = routes_root[route][part_name][path]
+        for key, value in sections_dict.items():
+            if isinstance(value, str) and value.startswith("@"):
+                sections_dict[key] = aliases[value]
+            sections[key] = SectionProperties.from_dict(sections_dict[key])
+    return sections
+
+def read_path_part_list_like(path: str, routes_root: dict[str, Any], route: str, aliases: dict[str, Any], part_name: str
+                             ) -> list[str]:
+    if path in routes_root[route][part_name].keys():
+        part_dict: dict[str, Any] = routes_root[route][part_name]
+        value = part_dict[path]
+        if isinstance(value, str) and value.startswith("@"):
+            value = aliases[value]
+        return value
+    return []
+
+def read_index_v4(index_file: Path, route: RouteModel, version: int) -> IndexDataV2:
     index_data = json.load(open(index_file))
     data_folder: str = index_data["data_folder"]
     generic_aggs_path: str = index_data["generic_aggregations"]
     aliases: dict[str, Any] = index_data["aliases"]
 
     agg_templates = _read_aggregation_templates(Path(data_folder + generic_aggs_path).resolve())
-    for template in agg_templates.values():
-        print(f"template {template.name}")
+    # for template in agg_templates.values():
+    #     print(f"template {template.name}")
 
     routes_root = index_data["routes"]
-    #
+    # files
     files: list[str] = routes_root[route.name]["files"]
-    # sections: list[str] = routes_root[route.name]["sections"]
-    # dashboard_sections: list[str] = _fix_asterisk(routes_root[route.name]["dashboard_sections"], sections)
-    # dashboard_aggregations: list[str] = routes_root[route.name]["dashboard_aggregations"]
-    # aggregations: dict[str, AggregationDesc] = {}
-    # for agg_name, agg_values in routes_root[route.name]["aggregations"].items():
-    #     if agg_values.get("basedOn") is not None:
-    #         agg_template = agg_templates[agg_values["basedOn"]]
-    #         inputs = _fix_asterisk(agg_values["inputs"], sections)
-    #         agg = agg_template.copy(inputs, agg_name)
-    #         aggregations[agg_name] = agg
+    files = [data_folder + file_ for file_ in files]
+    # aliases
+    route_aliases: dict[str, Any] = {}
+    if "aliases" in routes_root[route.name]:
+        route_aliases = routes_root[route.name]["aliases"]
+    aliases.update(route_aliases)
 
-    return IndexData(
+    index = IndexDataV2(
         version=version,
         files=files,
-        aggregations={},
-        sections=[],
-        dashboard_sections=[],
-        dashboard_aggregations=[],
+        route=route.name,
     )
+    # paths
+    paths: list[str] = routes_root[route.name]["paths"]
+    for path in paths:
+        props = PathProperties(path=path)
+        # sections
+        props.sections = read_path_part_section_like(path, routes_root, route.name, aliases, "sections")
+        # aggregations
+        aggregations: dict[str, AggregationDesc] = {}
+        for agg_name, agg_values in routes_root[route.name]["aggregations"].items():
+            agg_template = agg_templates[agg_values["basedOn"]]
+            inputs = agg_values["inputs"]
+            if isinstance(inputs, str) and inputs.startswith("@"):
+                inputs = aliases[inputs]
+            agg_path = agg_values["path"]
+            if agg_path.lower() == path.lower():
+                agg = agg_template.copy(inputs, agg_name, path)
+                aggregations[agg_name] = agg
+
+        props.aggregations = aggregations
+        # constants
+        props.constants = read_path_part_section_like(path, routes_root, route.name, aliases, "constants")
+        # dashboard sections
+        props.dashboard_sections = read_path_part_list_like(path, routes_root, route.name, aliases,
+                                                            "dashboard_sections")
+        # dashboard aggregations
+        props.dashboard_aggregations = read_path_part_list_like(path, routes_root, route.name, aliases,
+                                                            "dashboard_aggregations")
+        # dashboard constants
+        props.dashboard_constants = read_path_part_list_like(path, routes_root, route.name, aliases,
+                                                                "dashboard_constants")
+        index.add_path_props(path, props)
+
+
+    return index
 
 
 def read_index(index_file: Path, route: RouteModel, version: int) -> IndexData:

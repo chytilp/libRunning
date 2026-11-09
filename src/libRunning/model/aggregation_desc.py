@@ -98,7 +98,7 @@ class AggregationDesc:
     def is_it_template(self) -> bool:
         return self.name.startswith("@")
 
-    def copy(self, inputs: list[str], name: str) -> AggregationDesc:
+    def copy(self, inputs: list[str], name: str, path: str) -> AggregationDesc:
         return AggregationDesc(
             name=name,
             reducer=self.reducer,
@@ -108,4 +108,5 @@ class AggregationDesc:
             time_convertible=self.time_convertible,
             all_inputs_needed=self.all_inputs_needed,
             compute_with_field=self.compute_with_field,
+            path=path,
         )
