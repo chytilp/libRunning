@@ -91,9 +91,8 @@ def test_index_v4_routes() -> None:
 def test_v4_index_format() -> None:
     route = RouteModel(name="tich", description="")
     file_path = Path(__file__).parent / "data" / "indexV4.json"
-    index_data: IndexDataV2 = read_index_v4(file_path, route, 4)
+    index_data: IndexDataV2 = read_index_v4(file_path, route)
     assert index_data.files == ["./tests/data/tich.json"]
-    assert index_data.version == 4
     assert index_data.route == "tich"
     all_sections = ["1.km", "2.km", "3.km", "4.km", "5.km", "6.km", "7.km", "8.km", "9.km", "10.km", "11.km"]
     # time path

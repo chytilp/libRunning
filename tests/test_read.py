@@ -1,7 +1,8 @@
 from pathlib import Path
 from typing import Any
 
-from libRunning.core.functions import read, read_v2
+from libRunning.core.data_wrapper import DataWrapper, TrainingWrapper
+from libRunning.core.read import read, read_data
 
 folder = Path(__file__).parent.resolve()
 
@@ -59,18 +60,27 @@ def test_read_training_with_interval() -> None:
 
 def test_read_v2_format() -> None:
     data: dict[str, Any] = {"trainings": {}}
-    new_data = read_v2(data, ["./tests/data/tich.json"])
-    assert len(new_data["trainings"]) == 1
-    assert list(new_data["trainings"].keys())[0] == "2026-02-14"
-    root = new_data["trainings"]["2026-02-14"]
+    data: DataWrapper = read_data(data, ["./tests/data/tich.json"])
+    assert len(data.trainings()) == 1
+    assert data.trainings()[0] == "2026-02-14"
+    date = "2026-02-14"
     sections = [f"{idx}.km" for idx in range(1, 12)]
-    assert list(root["time"]["sections"].keys()) == sections
-    assert root["time"]["sections"]["1.km"]["value"] == 270
-    assert root["time"]["sections"]["11.km"]["value"] == 420
-    assert list(root["tf"]["sections"].keys()) == sections
-    assert root["tf"]["sections"]["1.km"]["value"] == 100
-    assert root["tf"]["sections"]["11.km"]["value"] == 150
-    assert list(root["constants"].keys()) == ["tf_max", "tf_avg"]
-    assert root["constants"]["tf_max"] == 155
-    assert root["note"] == "mokry snih"
-
+    training: TrainingWrapper | None = data.get_training(date)
+    assert training is not None
+    assert training.date == date
+    assert training.has_path("time")
+    assert training.has_path("tf")
+    assert not training.has_path("xy")
+    assert training.paths() == ["tf", "time"]
+    assert training.sections("time") == sections
+    assert training.section_obj("time", "1.km")["value"] == 270
+    assert training.section_obj( "time", "11.km")["value"] == 420
+    assert training.sections("tf") == sections
+    assert training.section_obj("tf", "1.km")["value"] == 100
+    assert training.section_obj("tf", "11.km")["value"] == 150
+    assert training.constants() == ["tf_max", "tf_avg"]
+    assert training.constant_obj()["tf_max"] == 155
+    assert training.note() == "mokry snih"
+    assert training.aggregations("time") == []
+    assert training.aggregations("tf") == []
+    assert training.aggregation_obj("time", "total") is None

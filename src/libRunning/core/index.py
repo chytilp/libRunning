@@ -126,7 +126,7 @@ def read_path_part_list_like(path: str, routes_root: dict[str, Any], route: str,
         return value
     return []
 
-def read_index_v4(index_file: Path, route: RouteModel, version: int) -> IndexDataV2:
+def read_index_v4(index_file: Path, route: RouteModel) -> IndexDataV2:
     index_data = json.load(open(index_file))
     data_folder: str = index_data["data_folder"]
     generic_aggs_path: str = index_data["generic_aggregations"]
@@ -147,7 +147,6 @@ def read_index_v4(index_file: Path, route: RouteModel, version: int) -> IndexDat
     aliases.update(route_aliases)
 
     index = IndexDataV2(
-        version=version,
         files=files,
         route=route.name,
     )
@@ -191,7 +190,7 @@ def read_index(index_file: Path, route: RouteModel, version: int) -> IndexData:
     if version == 3:
         return read_index_v3(index_file, route, version)
     elif version == 4:
-        return read_index_v4(index_file, route, version)
+        return read_index_v4(index_file, route)
 
     index_data = json.load(open(index_file))
     if index_data.get(route.name) is None:

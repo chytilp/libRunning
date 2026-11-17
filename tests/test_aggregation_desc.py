@@ -2,7 +2,7 @@ from typing import Any
 
 import pytest
 
-from libRunning.model.aggregation_desc import AggregationDesc, Filter # , SortDefiniton
+from libRunning.model.aggregation_desc import AggregationDesc, Filter, SortDefinition
 
 
 @pytest.mark.parametrize(
@@ -101,7 +101,7 @@ def test_median_aggregation(collection: list[dict], expected_result: int) -> Non
     agg_desc = AggregationDesc(
         reducer="median",
         name="custom reducer",
-        # sort_definition=SortDefiniton.LESS_IS_BEST,
+        sort_definition=SortDefinition.LESS_IS_BEST,
         time_convertible=False,
         all_inputs_needed=False,
         compute_with_field="value"
