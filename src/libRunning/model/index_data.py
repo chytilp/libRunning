@@ -51,13 +51,13 @@ class PathProperties:
     dashboard_aggregations: list[str] = field(default_factory=list)
     dashboard_constants: list[str] = field(default_factory=list)
 
-    def get_session_props(self, session: str) -> ItemDesc:
-        session_props = self.sections[session]
+    def get_section_props(self, section: str) -> ItemDesc:
+        section_props = self.sections[section]
         return ItemDesc(
-            name=session,
+            name=section,
             path=self.path,
-            sort_definition=session_props.sort_definition,
-            time_convertible=session_props.time_convertible,
+            sort_definition=section_props.sort_definition,
+            time_convertible=section_props.time_convertible,
         )
 
     def get_aggregation_props(self, aggregation: str) -> ItemDesc:
@@ -70,12 +70,19 @@ class PathProperties:
         )
 
     @property
-    def session_keys(self) -> list[str]:
+    def section_keys(self) -> list[str]:
         return list(self.sections.keys())
 
     @property
     def aggregation_keys(self) -> list[str]:
         return list(self.aggregations.keys())
+
+    @property
+    def sections_props(self) -> list[ItemDesc]:
+        keys = self.sections.keys()
+        output = [self.get_section_props(key) for key in keys]
+        return output
+
 
 @dataclass
 class IndexDataV2:

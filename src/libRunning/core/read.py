@@ -52,7 +52,7 @@ def read_data(data: dict[str, Any], files: list[str], from_: str = "", to_: str 
                 if has[path]:
                     for section, value in values[path].items():
                         trainings[training_key][path]["sections"][section] = {"order": -1, "lost": -1, "grade": -1, "value": -1}
-                        if path == "time":
+                        if path in {"time",}:
                             trainings[training_key][path]["sections"][section]["value"] = to_sec(value)
                         else:
                             trainings[training_key][path]["sections"][section]["value"] = value

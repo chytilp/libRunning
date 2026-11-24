@@ -48,13 +48,13 @@ def get_sections(route: RouteModel) -> dict[str, list[str]]:
     index = read_index_v4(config.get_index_file_path(), route=route)
     output: dict[str, list[str]] = {}
     for path in index.paths:
-        sessions = index.get_path_props(path).session_keys
+        sessions = index.get_path_props(path).section_keys
         output[path] = sessions
     return output
 
 
 def get_aggregations(route: RouteModel) -> dict[str, list[str]]:
-    # spocitat agregace
+    # z indexu, rozdelene po path
     config = get_config()
     index = read_index_v4(config.get_index_file_path(), route=route)
     output: dict[str, list[str]] = {}
