@@ -1,6 +1,7 @@
 from copy import deepcopy
 from typing import Any
 
+from core.grades import calculate_grades
 from libRunning.core.auxiliary import get_sorted_section_or_aggregation_values
 from libRunning.core.data_wrapper import DataWrapper
 from libRunning.core.read import read_data

@@ -32,7 +32,7 @@ data_2: list[tuple[str, int]] = [
     ("2026-02-05", 1435),
 ]
 
-data_3: dict[str, Any] = {
+whole_data: dict[str, Any] = {
     "section_grades": {},
     "trainings": {
         "2026-02-01": {
@@ -170,19 +170,19 @@ def test_calculate_grade() -> None:
 
 
 def test_calculate_grades_from_app_data() -> None:
-    sorted_values = get_sorted_section_or_aggregation_values(data_3, "1.km", "sections")
+    sorted_values = get_sorted_section_or_aggregation_values(whole_data, "1.km", "sections")
     grades = calculate_grades(sorted_values)
     assert_data_grades(grades)
 
 
 def test_calculate_grades_not_in_data() -> None:
-    sorted_values = get_sorted_section_or_aggregation_values(data_3, "2.km", "sections")
+    sorted_values = get_sorted_section_or_aggregation_values(whole_data, "2.km", "sections")
     grades = calculate_grades(sorted_values)
     assert grades.empty is True
 
 
 def test_calculate_section_and_update_data() -> None:
-    data_: dict[str, Any] = data_3
+    data_: dict[str, Any] = whole_data
     section = "1.km"
     sorted_values = get_sorted_section_or_aggregation_values(data_, section, "sections")
     grades = calculate_grades(sorted_values)

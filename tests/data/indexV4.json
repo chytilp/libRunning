@@ -3,7 +3,9 @@
   "generic_aggregations": "common_aggregations.json",
   "aliases": {
     "@time-convertible-less-is-best": {"sort_definition": "less_is_best", "time_convertible": true},
-    "@not-time-convertible-less-is-best": {"sort_definition": "less_is_best", "time_convertible": false}
+    "@not-time-convertible-less-is-best": {"sort_definition": "less_is_best", "time_convertible": false},
+    "@time-convertible-more-is-best": {"sort_definition": "more_is_best", "time_convertible": true},
+    "@time-convertible-not-sort": {"sort_definition": "do_not_sort", "time_convertible": true}
   },
   "routes": {
     "tich": {
@@ -17,7 +19,8 @@
       ],
       "paths": [
         "time",
-        "tf"
+        "tf",
+        "tf_level"
       ],
       "sections": {
         "time": {
@@ -45,6 +48,13 @@
           "9.km": "@not-time-convertible-less-is-best",
           "10.km": "@not-time-convertible-less-is-best",
           "11.km": "@not-time-convertible-less-is-best"
+        },
+        "tf_level": {
+          "L1": "@time-convertible-more-is-best",
+          "L2": "@time-convertible-more-is-best",
+          "L3": "@time-convertible-more-is-best",
+          "L4": "@time-convertible-not-sort",
+          "L5": "@time-convertible-less-is-best"
         }
       },
       "aggregations": {
