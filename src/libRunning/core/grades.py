@@ -10,6 +10,7 @@ from libRunning.model.grade import Grade, Grades
 def calculate_grades(sorted_data: list[tuple[str, int]], aggregation: AggregationDesc | None = None) -> Grades:
     return calculate_section_grades(sorted_data, aggregation)
 
+
 def grades_for_one_value_list(values: list[int], aggregation: AggregationDesc | None = None) -> Grades:
     value = values[0]
     grades = Grades()

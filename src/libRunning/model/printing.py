@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Any
 
+from libRunning.model.aggregation_desc import SortDefinition
+
 
 @dataclass
 class RouteModel:
@@ -40,6 +42,43 @@ class SectionModel:
             name=name,
             **data
         )
+
+
+@dataclass
+class SectionModelV2:
+    name: str
+    order: int
+    grade: int
+    lost: int
+    time_convertible: bool
+    sort_def: SortDefinition
+    value: int | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        d = {
+            "order": self.order,
+            "grade": self.grade,
+            "lost": self.lost,
+            "time_convertible": self.time_convertible,
+            "sort_def": self.sort_def,
+        }
+        if self.value is not None:
+            d["value"] = self.value
+        return d
+
+    @staticmethod
+    def from_dict(data: dict[str, Any]) -> SectionModelV2:
+        obj = SectionModelV2(
+            name="",
+            order=data["order"],
+            grade=data["grade"],
+            lost=data["lost"],
+            time_convertible=data["time_convertible"],
+            sort_def=data["sort_def"],
+        )
+        if "value" in data:
+            obj.value = data["value"]
+        return obj
 
 
 @dataclass

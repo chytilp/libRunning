@@ -1,6 +1,7 @@
 from typing import Any
 
 from libRunning.model.grade import Grades
+from libRunning.model.printing import SectionModelV2
 from libRunning.model.sorting import SortResult
 
 
@@ -48,3 +49,35 @@ def update_section_or_aggregation_data(data: dict[str, Any], type_: str, key: st
         sub_root["time_convertible"] = value.time_convertible
         sub_root["less_is_best"] = value.less_is_best
     return data
+
+def compare_section_or_aggregation_v2(sorted_values: list[tuple[str, int]], grades: Grades, name: str) -> dict[str, SectionModelV2]:
+    output: dict[str, SectionModelV2] = {}
+    if len(sorted_values) == 0:
+        return output
+
+    first = sorted_values[0][1]
+    order: int = 1
+    how_many: int = 1
+    index: int = -1
+    for date, value in sorted_values:
+        index += 1
+        if index == 0:
+            pass
+        elif sorted_values[index - 1][1] == value:
+            how_many += 1
+        else:
+            order = order + how_many
+            how_many = 1
+
+        lost = abs(value - first)
+        if grades.empty:
+            raise ValueError("Grades cannot be empty")
+
+        grade = grades.get_grade_match(value)
+        if grade is None:
+            raise ValueError(f"Value: {value} cannot have None grade. Grades: {grades}")
+
+        output[date] = SectionModelV2(order=order, lost=lost, grade=grade, time_convertible=grades.time_convertible,
+                                      sort_def=grades.sort_definition, value=value, name=name)
+
+    return output

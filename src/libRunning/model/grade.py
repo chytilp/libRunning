@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from decimal import Decimal
 
+from libRunning.model.aggregation_desc import SortDefinition
+
 
 @dataclass
 class Grade:
@@ -40,6 +42,7 @@ class Grades:
     grades: dict[int, Grade] = field(default_factory=dict)
     time_convertible: bool = True
     less_is_best: bool = True
+    sort_definition: SortDefinition = SortDefinition.LESS_IS_BEST
 
     @property
     def empty(self) -> bool:
